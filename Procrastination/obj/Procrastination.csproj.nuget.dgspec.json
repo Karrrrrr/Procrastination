@@ -1,0 +1,70 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Документы\\Шарага\\ВПКС\\Лабораторные работы\\Лабораторная работа 8\\Procrastination\\Procrastination\\Procrastination.csproj": {}
+  },
+  "projects": {
+    "D:\\Документы\\Шарага\\ВПКС\\Лабораторные работы\\Лабораторная работа 8\\Procrastination\\Procrastination\\Procrastination.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Документы\\Шарага\\ВПКС\\Лабораторные работы\\Лабораторная работа 8\\Procrastination\\Procrastination\\Procrastination.csproj",
+        "projectName": "Procrastination",
+        "projectPath": "D:\\Документы\\Шарага\\ВПКС\\Лабораторные работы\\Лабораторная работа 8\\Procrastination\\Procrastination\\Procrastination.csproj",
+        "packagesPath": "C:\\Users\\Сабка\\.nuget\\packages\\",
+        "outputPath": "D:\\Документы\\Шарага\\ВПКС\\Лабораторные работы\\Лабораторная работа 8\\Procrastination\\Procrastination\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Сабка\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "monoandroid13.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "monoandroid13.0": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "monoandroid13.0": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.17, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[5.0.17, )"
+            },
+            "Plugin.LocalNotification": {
+              "target": "Package",
+              "version": "[10.1.3, )"
+            },
+            "Xamarin.AndroidX.AppCompat": {
+              "target": "Package",
+              "version": "[1.2.0.5, )"
+            },
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.6.1, )"
+            },
+            "Xamarin.Google.Android.Material": {
+              "target": "Package",
+              "version": "[1.0.0.1, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}

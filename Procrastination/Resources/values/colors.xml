@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#DFD5C5</color>
+    <color name="colorPrimaryDark">#DFD5C5</color>
+    <color name="colorAccent">#DFD5C5</color>
+
+	<color name="button">#D9D9D9</color>
+	<color name="task_background">#D9D9D9</color>
+
+	<color name="red">#B24040</color>
+	<color name="orange">#E2832B</color>
+	<color name="yellow">#ECD03E</color>
+	<color name="green">#468341</color>
+	<color name="blue">#61A1ED</color>
+	<color name="purple">#5F2AA4</color>
+</resources>
