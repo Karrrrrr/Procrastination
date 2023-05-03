@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Procrastination.Database
 {
-    internal class Notification
+    public class Notification
     {
         public int Id { get; set; }
         public string Repeat { get; set; }

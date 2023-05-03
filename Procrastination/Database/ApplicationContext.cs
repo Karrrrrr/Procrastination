@@ -13,20 +13,20 @@ using System.Text;
 
 namespace Procrastination.Database
 {
-    internal class ApplicationContext : DbContext
+    public class ApplicationContext : DbContext
     {
-        public DbSet<Task> Tasks => Set<Task>();
-        public DbSet<Notification> Notifications => Set<Notification>();
-        public ApplicationContext() => Database.EnsureCreated();
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var sqlitePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), @"OlsonSoftware\FinanceManager");
-            Directory.CreateDirectory(sqlitePath); var fileName = $"{sqlitePath}\fAppDB.db";
-            if (!File.Exists(fileName))
-            {
-                File.Create(fileName);
-            }
-            optionsBuilder.UseSqlite("Filename=" + fileName);
-        }
-    }
+		public DbSet<Task> Tasks => Set<Task>();
+		public DbSet<Notification> Notifications => Set<Notification>();
+		public ApplicationContext() => Database.EnsureCreated();
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			var sqlitePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), @"OlsonSoftware\FinanceManager");
+			Directory.CreateDirectory(sqlitePath); var fileName = $"{sqlitePath}\fAppDB.db";
+			if (!File.Exists(fileName))
+			{
+				File.Create(fileName);
+			}
+			optionsBuilder.UseSqlite("Filename=" + fileName);
+		}
+	}
 }

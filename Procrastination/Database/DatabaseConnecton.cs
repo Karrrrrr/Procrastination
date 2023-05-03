@@ -5,8 +5,11 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Plugin.LocalNotification;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -43,7 +46,7 @@ namespace Procrastination.Database
             Task task = new Task() { Id = id, Name = name, Color = color };
             if (type != "")
             {
-                task.Type = type;
+                task.Description = type;
             }
             Notification n = null;
             if (notification)
@@ -54,6 +57,7 @@ namespace Procrastination.Database
                     n.Date = date;
                 }
                 task.NotificationId = id;
+                Notifications.CreateNotification(id, name, type, repeat, date, time);
             }
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -66,7 +70,7 @@ namespace Procrastination.Database
             }
         }
 
-        public static bool CheckId(int id)
+		public static bool CheckId(int id)
         {
             Task res;
             using (ApplicationContext db = new ApplicationContext())
@@ -93,11 +97,11 @@ namespace Procrastination.Database
                 task.Name = name;
                 if (type != "")
                 {
-                    task.Type = type;
+                    task.Description = type;
                 }
                 else
                 {
-                    task.Type = "";
+                    task.Description = "";
                 }
                 task.Color = color;
                 if (notification)
@@ -110,6 +114,7 @@ namespace Procrastination.Database
                             n.Date = date;
                         }
                         task.NotificationId = id;
+                        Notifications.CreateNotification(id, name, type, repeat, date, time);
                     }
                     else
                     {
@@ -120,6 +125,7 @@ namespace Procrastination.Database
                         {
                             n.Date = date;
                         }
+                        Notifications.EditNotification(id, name, type, repeat, date, time);
                     }
                 }
                 else
@@ -128,6 +134,7 @@ namespace Procrastination.Database
                     {
                         task.NotificationId = null;
                         db.Notifications.Remove(db.Notifications.Find(id));
+                        Notifications.deleteNotification(id);
                     }
                 }
                 db.SaveChanges();
@@ -159,6 +166,7 @@ namespace Procrastination.Database
                 {
                     db.Remove(db.Tasks.Find(id));
                     db.Remove(db.Notifications.Find(id));
+                    Notifications.deleteNotification(id);
                 }
                 else
                 {
@@ -166,6 +174,51 @@ namespace Procrastination.Database
                 }
                 db.SaveChanges();
             }
+        }
+
+        public static List<Notifications> getAllNotifications()
+        {
+            List<Notifications> list = new List<Notifications>();
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                foreach (Task task in db.Tasks)
+                {
+                    if (task.NotificationId != null)
+                    {
+                        Notification n = db.Notifications.Find(task.NotificationId);
+                        if (((n.Repeat == "Один раз") && (n.Date != null) && (n.Date >= DateTime.Now)) || (n.Repeat == "Каждый день") || (n.Repeat == "Раз в неделю"))
+                        {
+                            DateTime date;
+                            if (n.Date == null)
+                            {
+                                date = DateTime.Now;
+                            }
+                            else
+                            {
+                                date = (DateTime)n.Date;
+                            }
+                            list.Add(new Notifications(task.Id, task.Name, task.Description, n.Repeat, date, n.Time));
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static List<Task> searchTasks(string searchString)
+        {
+            List<Task> tasks = new List<Task>();
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                foreach (Task task in db.Tasks)
+                {
+                    if (task.Name.Contains(searchString) || task.Description.Contains(searchString))
+                    {
+                        tasks.Add(task);
+                    }
+                }
+            }
+            return tasks;
         }
     }
 }

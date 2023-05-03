@@ -4,10 +4,6 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-		<item
-			android:id="@+id/nav_tasks"
-            android:title="Список дел"
-            android:checkable="false"/>
         <item
             android:id="@+id/nav_timer"
             android:title="Таймер"

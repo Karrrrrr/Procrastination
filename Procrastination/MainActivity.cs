@@ -16,6 +16,11 @@ using Procrastination.Database;
 using System.Collections.Generic;
 using Android.Graphics;
 using static Android.App.ActionBar;
+using System.Drawing;
+using System.Reflection.Emit;
+using Org.Apache.Http.Protocol;
+using System.Xml.Serialization;
+using Android.Views.InputMethods;
 
 namespace Procrastination
 {
@@ -41,9 +46,18 @@ namespace Procrastination
 
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.SetNavigationItemSelectedListener(this);
+
+            ImageButton search = FindViewById<ImageButton>(Resource.Id.searchButton);
+            search.Click += searchOnClick;
         }
 
-        public override void OnBackPressed()
+		private void searchOnClick(object sender, EventArgs e)
+		{
+			var intent = new Intent(this, typeof(SearchActivity));
+			StartActivity(intent);
+		}
+
+		public override void OnBackPressed()
         {
             DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             if(drawer.IsDrawerOpen(GravityCompat.Start))
@@ -68,11 +82,7 @@ namespace Procrastination
         {
             int id = item.ItemId;
 
-            if (id == Resource.Id.nav_tasks)
-            {
-                
-            }
-            else if (id == Resource.Id.nav_timer)
+            if (id == Resource.Id.nav_timer)
             {
                 var timer_intent = new Intent(this, typeof(TimerActivity));
                 StartActivity(timer_intent);
@@ -112,20 +122,12 @@ namespace Procrastination
             base.OnResume();
             LinearLayout tasksLayout = FindViewById<LinearLayout>(Resource.Id.tasks_layout);
             tasksLayout.RemoveAllViews();
-            if (delTask.Count > 0)
-            {
-                foreach (int task in delTask)
-                {
-                    DatabaseConnecton.deleteTask(task);
-                }
-                delTask.Clear();
-            }
             List<Task> tasks = DatabaseConnecton.GetTasks();
             if ((tasks != null) && (tasks.Count > 0))
             {
                 foreach (Task task in tasks)
                 {
-                    CreateTask(task);
+                    CreateTask(task, tasksLayout);
                 }
             }
             else
@@ -138,10 +140,10 @@ namespace Procrastination
             }
         }
 
-        void CreateTask(Task task)
+        private void CreateTask(Task task, LinearLayout tasksLayout)
         {
-            RelativeLayout taskLayout = new RelativeLayout(this);
-            taskLayout.SetBackgroundColor(new Color(Resource.Color.colorAccent));
+			RelativeLayout taskLayout = new RelativeLayout(this);
+            taskLayout.SetBackgroundResource(Resource.Drawable.task_layout_background);
             taskLayout.SetPadding(0, 0, 0, (int)Resources.GetDimension(Resource.Dimension.task_layout_padding_bottom));
             LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             int margin = (int)Resources.GetDimension(Resource.Dimension.task_layout_margin);
@@ -185,17 +187,19 @@ namespace Procrastination
             {
                 if (checkBox.Checked)
                 {
+                    checkBox.Text = ConvertToStrikethrough(checkBox.Text);
                     delTask.Add(task.Id);
                 }
                 else
                 {
+                    checkBox.Text = task.Name;
                     delTask.Remove(task.Id);
                 }
             };
 
-            if (task.Type != null)
+            if (task.Description != null)
             {
-                TextView type = new TextView(this) { Text = task.Type, TextSize = (int)Resources.GetDimension(Resource.Dimension.type_size) };
+                TextView type = new TextView(this) { Text = task.Description, TextSize = (int)Resources.GetDimension(Resource.Dimension.type_size) };
                 LayoutParams typeParams = new LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
                 typeParams.SetMargins((int)Resources.GetDimension(Resource.Dimension.type_marginLeft), (int)Resources.GetDimension(Resource.Dimension.type_marginTop), 0, 0);
                 taskLayout.AddView(type, typeParams);
@@ -225,16 +229,53 @@ namespace Procrastination
             LayoutParams deleteParams = new LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
             deleteParams.SetMargins((int)Resources.GetDimension(Resource.Dimension.trash_ic_marginLeft), (int)Resources.GetDimension(Resource.Dimension.ic_marginTop), 0, 0);
 
-            TextView id = new TextView(this) { Text = task.Id.ToString(), Visibility = ViewStates.Invisible };
-
             taskLayout.AddView(tag);
             taskLayout.AddView(checkBox, checkboxParams);
             taskLayout.AddView(editButton, editParams);
             taskLayout.AddView(deleteButton, deleteParams);
-            taskLayout.AddView(id);
 
-            FindViewById<LinearLayout>(Resource.Id.tasks_layout).AddView(taskLayout, layoutParams);
+            tasksLayout.AddView(taskLayout, layoutParams);
         }
-    }
+
+        string ConvertToStrikethrough(string text)
+        {
+            string strikethroughText = "";
+            foreach (char symb in text)
+            {
+                strikethroughText += $"{symb}\u0336";
+            }
+            return strikethroughText;
+        }
+
+        void deleteTasks()
+        {
+			if (delTask.Count > 0)
+			{
+				foreach (int task in delTask)
+				{
+					DatabaseConnecton.deleteTask(task);
+				}
+				delTask.Clear();
+			}
+		}
+
+		protected override void OnPause()
+        {
+			deleteTasks();
+			base.OnPause();
+		}
+
+		protected override void OnStop()
+		{
+			deleteTasks();
+			base.OnStop();
+		}
+
+		protected override void OnDestroy()
+		{
+			deleteTasks();
+			base.OnDestroy();
+		}
+	}
 }
 

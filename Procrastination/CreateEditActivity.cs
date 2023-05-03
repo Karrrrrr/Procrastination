@@ -33,6 +33,7 @@ namespace Procrastination
         internal static Database.Notification notification;
         DatePickerDialog datePicker;
         TimePickerDialog timePicker;
+        bool loading = false;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -112,7 +113,6 @@ namespace Procrastination
                                     DateTime date = DateTime.Parse(FindViewById<Button>(Resource.Id.select_date).Text);
                                     DateTime time = DateTime.Parse(FindViewById<Button>(Resource.Id.select_time).Text);
                                     DatabaseConnecton.CreateTask(name, FindViewById<EditText>(Resource.Id.type_edit_text).Text, getColor(), true, repeat, date, time);
-                                    CreateNotification(name, repeat, date, time);
                                     Finish();
                                 }
                                 else
@@ -125,7 +125,6 @@ namespace Procrastination
                                 string name = FindViewById<EditText>(Resource.Id.name_edit_text).Text;
                                 DateTime time = DateTime.Parse(FindViewById<Button>(Resource.Id.select_time).Text);
                                 DatabaseConnecton.CreateTask(name, FindViewById<EditText>(Resource.Id.type_edit_text).Text, getColor(), true, "Каждый день", DateTime.Now, time);
-                                CreateNotification(name, "Каждый день", DateTime.Now, time);
                                 Finish();
                             }
                         }
@@ -186,25 +185,6 @@ namespace Procrastination
             }
         }
 
-        private void CreateNotification(string name, string repeat, DateTime date, DateTime time)
-        {
-            DateTime notificationTime = date.Date + time.TimeOfDay;
-            NotificationRequest notification = new NotificationRequest { Title = name };
-            if (repeat == "Один раз")
-            {
-                notification.Schedule = new NotificationRequestSchedule() { RepeatType = NotificationRepeat.No, NotifyTime = notificationTime };
-            }
-            else if (repeat == "Каждый день")
-            {
-                notification.Schedule = new NotificationRequestSchedule() { RepeatType = NotificationRepeat.Daily, NotifyTime = time };
-            }
-            else
-            {
-                notification.Schedule = new NotificationRequestSchedule() { RepeatType = NotificationRepeat.Weekly, NotifyTime = notificationTime };
-            }
-            LocalNotificationCenter.Current.Show(notification);
-        }
-
         private void selectTimeOnClick(object sender, EventArgs e)
         {
             timePicker = new TimePickerDialog(this, (sender, e) => {
@@ -247,14 +227,21 @@ namespace Procrastination
 
         private void spinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            var spinner = sender as Spinner;
-            if (spinner.SelectedItemId == 1)
+            if (loading)
             {
-                everyDaySeleted();
+                loading = false;
             }
             else
             {
-                onceSeleted();
+                var spinner = sender as Spinner;
+                if (spinner.SelectedItemId == 1)
+                {
+                    everyDaySeleted();
+                }
+                else
+                {
+                    onceSeleted();
+                }
             }
         }
 
@@ -290,9 +277,9 @@ namespace Procrastination
             {
                 SupportActionBar.Title = GetString(Resource.String.edit_task);
                 FindViewById<EditText>(Resource.Id.name_edit_text).Text = task.Name;
-                if (task.Type != null)
+                if (task.Description != null)
                 {
-                    FindViewById<EditText>(Resource.Id.type_edit_text).Text = task.Type;
+                    FindViewById<EditText>(Resource.Id.type_edit_text).Text = task.Description;
                 }
                 else
                 {
@@ -331,34 +318,32 @@ namespace Procrastination
                     {
                         date = (DateTime)notification.Date;
                     }
-                    if (notification.Repeat == "Один раз")
+					if (notification.Repeat == "Один раз")
                     {
                         FindViewById<Spinner>(Resource.Id.select_notification).SetSelection(0);
                         FindViewById<Button>(Resource.Id.select_date).Text = date.ToString("d");
                         FindViewById<Button>(Resource.Id.select_date).Enabled = true;
-                        FindViewById<Button>(Resource.Id.select_time).Text = notification.Time.ToString("t");
                     }
                     else if (notification.Repeat == "Каждый день")
                     {
                         FindViewById<Spinner>(Resource.Id.select_notification).SetSelection(1);
                         FindViewById<Button>(Resource.Id.select_date).Text = "Выберите дату";
                         FindViewById<Button>(Resource.Id.select_date).Enabled = false;
-                        FindViewById<Button>(Resource.Id.select_time).Text = notification.Time.ToString("t");
                     }
                     else if (notification.Repeat == "Раз в неделю")
                     {
                         FindViewById<Spinner>(Resource.Id.select_notification).SetSelection(2);
                         FindViewById<Button>(Resource.Id.select_date).Text = date.ToString("dddd");
                         FindViewById<Button>(Resource.Id.select_date).Enabled = true;
-                        FindViewById<Button>(Resource.Id.select_time).Text = notification.Time.ToString("t");
-
                     }
-                }
+					FindViewById<Button>(Resource.Id.select_time).Text = notification.Time.ToString("t");
+				}
                 else
                 {
                     FindViewById<Switch>(Resource.Id.notification_switch).Checked = false;
                     FindViewById<LinearLayout>(Resource.Id.notification_layout).Visibility = ViewStates.Invisible;
                 }
+                loading = true;
             }
         }
     }

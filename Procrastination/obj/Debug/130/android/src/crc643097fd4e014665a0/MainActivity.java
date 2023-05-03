@@ -15,6 +15,9 @@ public class MainActivity
 			"n_onBackPressed:()V:GetOnBackPressedHandler\n" +
 			"n_onRequestPermissionsResult:(I[Ljava/lang/String;[I)V:GetOnRequestPermissionsResult_IarrayLjava_lang_String_arrayIHandler\n" +
 			"n_onResume:()V:GetOnResumeHandler\n" +
+			"n_onPause:()V:GetOnPauseHandler\n" +
+			"n_onStop:()V:GetOnStopHandler\n" +
+			"n_onDestroy:()V:GetOnDestroyHandler\n" +
 			"n_onNavigationItemSelected:(Landroid/view/MenuItem;)Z:GetOnNavigationItemSelected_Landroid_view_MenuItem_Handler:Google.Android.Material.Navigation.NavigationView/IOnNavigationItemSelectedListenerInvoker, Xamarin.Google.Android.Material\n" +
 			"";
 		mono.android.Runtime.register ("Procrastination.MainActivity, Procrastination", MainActivity.class, __md_methods);
@@ -69,6 +72,30 @@ public class MainActivity
 	}
 
 	private native void n_onResume ();
+
+
+	public void onPause ()
+	{
+		n_onPause ();
+	}
+
+	private native void n_onPause ();
+
+
+	public void onStop ()
+	{
+		n_onStop ();
+	}
+
+	private native void n_onStop ();
+
+
+	public void onDestroy ()
+	{
+		n_onDestroy ();
+	}
+
+	private native void n_onDestroy ();
 
 
 	public boolean onNavigationItemSelected (android.view.MenuItem p0)

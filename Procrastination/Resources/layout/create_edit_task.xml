@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тип:"
+            android:text="Описание:"
             android:textSize="@dimen/text_size"
             android:layout_margin="@dimen/text_margin"/>
 
@@ -166,16 +166,17 @@
 
                 <Button
                     android:id="@+id/select_date"
-                    android:layout_width="match_parent"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:text="Выберите дату"
-                    android:layout_marginHorizontal="@dimen/button_margin"/>
+                    android:layout_marginLeft="@dimen/button_margin"/>
 
                 <Button
                     android:id="@+id/select_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:text="Выберите время"/>
+                    android:text="Выберите время"
+                    android:layout_marginHorizontal="@dimen/button_margin"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
