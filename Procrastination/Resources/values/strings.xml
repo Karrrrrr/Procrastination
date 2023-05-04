@@ -11,4 +11,10 @@
 		<item>Каждый день</item>
 		<item>Раз в неделю</item>
 	</string-array>
+
+	<string-array name="sort_list">
+		<item>по умолчанию</item>
+		<item>по названию</item>
+		<item>по цвету</item>
+	</string-array>
 </resources>

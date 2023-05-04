@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Plugin.LocalNotification;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,21 +18,30 @@ namespace Procrastination.Database
 {
     internal class DatabaseConnecton
     {
-        public static List<Task> GetTasks()
+        public static List<Task> GetTasks(int code)
         {
-            try
+            List<Task> tasks;
+            if (code == 0)
             {
-                List<Task> tasks;
                 using (ApplicationContext db = new ApplicationContext())
                 {
-                    tasks = db.Tasks.ToList();
-                }
-                return tasks;
+					return db.Tasks.ToList();
+				}
             }
-            catch
+            else if (code == 1)
             {
-                return null;
+                using (ApplicationContext db = new ApplicationContext())
+                {
+                    return db.Tasks.ToList().OrderBy(x => x.Name).ToList();
+                }
             }
+            else
+            {
+				using (ApplicationContext db = new ApplicationContext())
+				{
+					return db.Tasks.ToList().OrderBy(x => x.Color).ToList();
+				}
+			}
         }
 
         public static void CreateTask(string name, string type, string color, bool notification, string repeat, DateTime date, DateTime time)

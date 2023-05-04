@@ -49,7 +49,19 @@ namespace Procrastination
 
             ImageButton search = FindViewById<ImageButton>(Resource.Id.searchButton);
             search.Click += searchOnClick;
-        }
+
+            Spinner spinner = FindViewById<Spinner>(Resource.Id.sort);
+			spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs>(spinner_ItemSelected);
+			var adapter = ArrayAdapter.CreateFromResource(this, Resource.Array.sort_list, Android.Resource.Layout.SimpleSpinnerItem);
+			adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+			spinner.Adapter = adapter;
+		}
+
+		private void spinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
+		{
+			var spinner = sender as Spinner;
+            LoadTasks((int)spinner.SelectedItemId);
+		}
 
 		private void searchOnClick(object sender, EventArgs e)
 		{
@@ -120,25 +132,30 @@ namespace Procrastination
         protected override void OnResume()
         {
             base.OnResume();
-            LinearLayout tasksLayout = FindViewById<LinearLayout>(Resource.Id.tasks_layout);
-            tasksLayout.RemoveAllViews();
-            List<Task> tasks = DatabaseConnecton.GetTasks();
-            if ((tasks != null) && (tasks.Count > 0))
-            {
-                foreach (Task task in tasks)
-                {
-                    CreateTask(task, tasksLayout);
-                }
-            }
-            else
-            {
-                TextView tw = new TextView(this) { Text = "Нет дел", TextAlignment = TextAlignment.Center };
-                LayoutParams twParams = new LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
-                twParams.SetMargins(0, (int)Resources.GetDimension(Resource.Dimension.no_tasks_marginTop), 0, 0);
-
-                tasksLayout.AddView(tw, twParams);
-            }
+            LoadTasks(0);
         }
+
+        private void LoadTasks(int code)
+        {
+			LinearLayout tasksLayout = FindViewById<LinearLayout>(Resource.Id.tasks_layout);
+			tasksLayout.RemoveAllViews();
+			List<Task> tasks = DatabaseConnecton.GetTasks(code);
+			if ((tasks != null) && (tasks.Count > 0))
+			{
+				foreach (Task task in tasks)
+				{
+					CreateTask(task, tasksLayout);
+				}
+			}
+			else
+			{
+				TextView tw = new TextView(this) { Text = "Нет дел", TextAlignment = TextAlignment.Center };
+				LayoutParams twParams = new LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
+				twParams.SetMargins(0, (int)Resources.GetDimension(Resource.Dimension.no_tasks_marginTop), 0, 0);
+
+				tasksLayout.AddView(tw, twParams);
+			}
+		}
 
         private void CreateTask(Task task, LinearLayout tasksLayout)
         {

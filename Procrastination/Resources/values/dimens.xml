@@ -27,6 +27,7 @@
 	<dimen name="trash_ic_marginLeft">320dp</dimen>
 	<dimen name="no_tasks_marginTop">300dp</dimen>
 	<dimen name="search_marginLeft">180dp</dimen>
+	<dimen name="spinner_margin">5dp</dimen>
 
 	<dimen name="task_layout_padding_bottom">25dp</dimen>
 	

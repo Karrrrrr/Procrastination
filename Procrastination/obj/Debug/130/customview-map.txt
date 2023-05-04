@@ -90,6 +90,7 @@ size;obj\Debug\130\res\drawable-v21\timer_circle.xml
 solid;obj\Debug\130\res\drawable-v21\separate_line.xml
 solid;obj\Debug\130\res\drawable-v21\task_layout_background.xml
 solid;obj\Debug\130\res\drawable-v21\task_layout_shadow.xml
+Spinner;obj\Debug\130\res\layout\content_main.xml
 Spinner;obj\Debug\130\res\layout\create_edit_task.xml
 string;obj\Debug\130\res\values\strings.xml
 string-array;obj\Debug\130\res\values\drawables.xml
